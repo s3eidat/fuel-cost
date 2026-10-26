@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' data: blob:; connect-src 'self' data: blob:; worker-src 'self' blob:; manifest-src 'self'; form-action 'none'; base-uri 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<title>Fuel Cost Calculator — Trip Fuel Cost, Split &amp; Compare Cars | S3eidat Tools</title>
+<meta name="description" content="How much will this trip cost in fuel? Distance in km or miles, consumption in L/100 km, km/L or mpg (US or UK), price per litre or gallon, round trip, split among passengers, cost per km, and compare two cars. Free and private.">
+<meta property="og:title" content="Fuel Cost — what will this trip cost?">
+<meta property="og:description" content="Trip fuel cost with L/100 km, km/L and mpg, split and compare two cars. Runs 100% in your browser.">
+<link rel="icon" href="kit/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="kit/kit.css">
+<link rel="stylesheet" href="app.css">
+<script src="kit/kit.js"></script>
+<!--s3:seo-->
+<link rel="canonical" href="https://s3eidat.github.io/fuel-cost/">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0d0f12">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="S3eidat Tools">
+<meta property="og:url" content="https://s3eidat.github.io/fuel-cost/">
+<meta property="og:image" content="https://s3eidat.github.io/fuel-cost/screenshot.png">
+<meta property="og:image:width" content="1280"><meta property="og:image:height" content="800">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Fuel Cost — What will this trip cost in fuel?">
+<meta name="twitter:description" content="What will this trip cost in fuel?. Free, private and runs 100% in your browser: no sign-up, no uploads.">
+<meta name="twitter:image" content="https://s3eidat.github.io/fuel-cost/screenshot.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Fuel Cost", "url": "https://s3eidat.github.io/fuel-cost/", "description": "What will this trip cost in fuel?. Free, private and runs 100% in your browser: no sign-up, no uploads.", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any (web browser)", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "image": "https://s3eidat.github.io/fuel-cost/screenshot.png", "author": {"@type": "Person", "name": "s3eidat", "url": "https://github.com/s3eidat"}}</script>
+<!--/s3:seo-->
+</head>
+<body data-tool="fuel-cost">
+<main class="s3-main">
+  <section class="s3-hero">
+    <h1>Fuel Cost</h1>
+    <p>Work out what a trip costs in fuel, split it between passengers, and see how much a more efficient car would save.</p>
+  </section>
+
+  <div class="fc-layout">
+    <section class="card stack">
+      <h2>Trip</h2>
+      <div class="fc-row">
+        <label class="field grow">Distance
+          <input class="input fc-big" id="dist" inputmode="decimal" autocomplete="off" placeholder="0">
+        </label>
+        <div class="seg" id="distUnit" role="group" aria-label="Distance unit">
+          <button aria-pressed="true" data-v="km">km</button>
+          <button aria-pressed="false" data-v="mi">miles</button>
+        </div>
+      </div>
+      <label class="check"><input type="checkbox" id="round"> Round trip (there and back)</label>
+      <div class="fc-row">
+        <label class="field grow">Fuel price
+          <input class="input" id="price" inputmode="decimal" autocomplete="off" placeholder="0.00">
+        </label>
+        <label class="field">per
+          <select class="select" id="priceUnit">
+            <option value="L">litre</option>
+            <option value="galUS">US gallon</option>
+            <option value="galUK">UK gallon</option>
+          </select>
+        </label>
+        <label class="field fc-cur">Currency
+          <input class="input" id="cur" maxlength="6" autocomplete="off" dir="auto" placeholder="JD">
+        </label>
+      </div>
+      <label class="field">Split between (people)
+        <div class="row nowrap fc-people">
+          <button class="btn icon" id="pMinus" aria-label="Fewer people">−</button>
+          <input class="input fc-num" id="people" inputmode="numeric" value="1" aria-label="Number of people">
+          <button class="btn icon" id="pPlus" aria-label="More people">+</button>
+        </div>
+      </label>
+
+      <h2 class="fc-h">Car <span id="nameAlbl">A</span></h2>
+      <div class="fc-row">
+        <label class="field fc-name">Name <input class="input" id="nameA" maxlength="30" dir="auto" placeholder="My car"></label>
+        <label class="field grow">Consumption <input class="input" id="consA" inputmode="decimal" autocomplete="off" placeholder="7.5"></label>
+        <label class="field">Unit <select class="select fc-cu" id="unitA"></select></label>
+      </div>
+      <p class="faint fc-conv" id="convA"></p>
+
+      <label class="check"><input type="checkbox" id="compare"> Compare with a second car</label>
+      <div id="carB" class="stack" hidden>
+        <div class="fc-row">
+          <label class="field fc-name">Name <input class="input" id="nameB" maxlength="30" dir="auto" placeholder="Other car"></label>
+          <label class="field grow">Consumption <input class="input" id="consB" inputmode="decimal" autocomplete="off" placeholder="5.0"></label>
+          <label class="field">Unit <select class="select fc-cu" id="unitB"></select></label>
+        </div>
+        <label class="field">Its fuel price (blank = same as above)
+          <input class="input" id="priceB" inputmode="decimal" autocomplete="off" placeholder="same">
+        </label>
+        <p class="faint fc-conv" id="convB"></p>
+      </div>
+    </section>
+
+    <section class="card stack fc-out">
+      <div class="fc-res" id="res" aria-live="polite"></div>
+      <div class="stats" id="stats"></div>
+      <div id="cmp"></div>
+      <div class="row end"><button class="btn small" id="copy"><svg class="i"><use href="#i-copy"/></svg>Copy</button></div>
+      <p class="faint fc-note">Real consumption depends on speed, traffic, load and air-conditioning. Use your car's real average for the best estimate.</p>
+    </section>
+  </div>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
